@@ -1,4 +1,4 @@
 FROM openjdk:17-alpine
-ARG JAR_FILE=../eurekaServer/target/*.jar
+ARG JAR_FILE=..\..\services\eurekaServer\targets\*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
