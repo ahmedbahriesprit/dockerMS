@@ -13,6 +13,7 @@ services:
     volumes:
       - '/home/postgres-data:/var/lib/postgresql/data'
   eureka-service:
+    build: ./eurekaServer
     image: eureka-service
     container_name: eureka-service
     restart: "on-failure"
@@ -22,6 +23,7 @@ services:
       - eureka.client.register-with-eureka=true
       - eureka.client.eureka-server-u-r-l-context=http://eureka-service:8761/eureka-service
   spring_app:
+    build: ./msUser
     image: "msuser"
     container_name: msuser
     restart: "on-failure"
