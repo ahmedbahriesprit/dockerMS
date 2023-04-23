@@ -1,34 +1,47 @@
 version: '3.9'
 services:
-  postgres:
-    image: postgres
-    container_name: postgres
+  mysql:
+    container_name: mysql
+    image: "mysql"
     restart: "on-failure"
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: ms_user_db
-    ports:
-      - "5432:5432"
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - '/home/postgres-data:/var/lib/postgresql/data'
-  eureka-service:
-    build: ./eurekaServer
-    image: eureka-service
-    container_name: eureka-service
+      - '/home/mysql-data:/var/lib/mysql'
+    networks:
+      - my-network      
+  eureka:
+    build:
+      context: ../services/eurekaServer
+      dockerfile: Dockerfile
+    image: eureka
+    container_name: eureka
     restart: "on-failure"
     ports:
       - "8761:8761"
     environment:
-      - eureka.client.register-with-eureka=true
-      - eureka.client.eureka-server-u-r-l-context=http://eureka-service:8761/eureka-service
+      - eureka.client.register-with-eureka=false
+      - eureka.client.fetch-registry=false
+    networks:
+      - my-network
   spring_app:
-    build: ./msUser
+    build:
+      context: ../services/microservicesUser
+      dockerfile: Dockerfile
     image: "msuser"
     container_name: msuser
     restart: "on-failure"
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
-      - postgres
-      - eureka-service
+      - mysql
+      - eureka
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://eureka:8761/eureka/
+    networks:
+      - my-network
+networks:
+  my-network:
+
+
+      
