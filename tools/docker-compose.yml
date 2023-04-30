@@ -8,6 +8,7 @@ services:
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+      - "9100:9100"
     networks:
       - monitoring
 
@@ -15,6 +16,7 @@ services:
     image: grafana/grafana:8.2.2
     ports:
       - "3000:3000"
+      - "4000:4000"
     networks:
       - monitoring
 
@@ -22,6 +24,7 @@ services:
     image: sonarqube:8.9.3-community
     ports:
       - "9000:9000"
+      - "10000:10000"
     networks:
       - monitoring
 
@@ -41,6 +44,7 @@ services:
       - nexus_data:/nexus-data
     ports:
       - "8081:8081"
+      - "8082:8082"
     networks:
       - monitoring
 
@@ -48,6 +52,7 @@ services:
     image: hashicorp/vault:1.7.3
     ports:
       - "8200:8200"
+      - "8300:8300"
     networks:
       - monitoring
 
@@ -57,7 +62,8 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
     ports:
-      - "8083:8080"
+      - "8083:8083"
+      - "8084:8084"
     networks:
       - monitoring
 
