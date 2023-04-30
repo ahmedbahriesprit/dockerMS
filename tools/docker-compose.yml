@@ -4,8 +4,6 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.30.3
-    volumes:
-      - prometheus_data:/prometheus
     ports:
       - "9090:9090"
       - "9100:9100"
@@ -40,8 +38,6 @@ services:
 
   nexus:
     image: sonatype/nexus3:3.37.0
-    volumes:
-      - nexus_data:/nexus-data
     ports:
       - "8081:8081"
       - "8082:8082"
@@ -52,7 +48,6 @@ services:
     image: hashicorp/vault:1.7.3
     ports:
       - "8200:8200"
-      - "8300:8300"
     networks:
       - monitoring
 
@@ -63,13 +58,10 @@ services:
       - KEYCLOAK_PASSWORD=admin
     ports:
       - "8083:8083"
-      - "8084:8084"
     networks:
       - monitoring
 
 networks:
   monitoring:
 volumes:
-  prometheus_data:
-  nexus_data:
   jenkins_home:
