@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:8.2.2
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+
+  sonarqube:
+    image: sonarqube:8.9.3-community
+    ports:
+      - "9000:9000"
+    networks:
+      - monitoring
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    networks:
+      - monitoring
+
+  nexus:
+    image: sonatype/nexus3:3.37.0
+    volumes:
+      - ./nexus_data:/nexus-data
+    ports:
+      - "8081:8081"
+    networks:
+      - monitoring
+
+  vault:
+    image: hashicorp/vault:1.7.3
+    ports:
+      - "8200:8200"
+    networks:
+      - monitoring
+
+  keycloak:
+    image: jboss/keycloak:15.0.2
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+    ports:
+      - "8083:8080"
+    networks:
+      - monitoring
+
+networks:
+  monitoring:

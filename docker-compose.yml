@@ -12,7 +12,7 @@ services:
       - my-network      
   eureka:
     build:
-      context: ../services/eurekaServer
+      context: ../backend/eurekaServer
       dockerfile: Dockerfile
     image: eureka
     container_name: eureka
@@ -24,12 +24,33 @@ services:
       - eureka.client.fetch-registry=false
     networks:
       - my-network
-  spring_app:
+  gatwayapi:
     build:
-      context: ../services/microservicesUser
+      context: ../backend/gatewayAPI
       dockerfile: Dockerfile
-    image: "msuser"
-    container_name: msuser
+    image: gatewayapi
+    container_name: gatewayapi
+    restart: "on-failure"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - eureka
+    environment:
+      - spring.cloud.gateway.routes[0].id=user-microservice-route
+      - spring.cloud.gateway.routes[0].uri=http://userserive:8081
+      - spring.cloud.gateway.routes[0].predicates[0]=Path=/users/**
+      - logging.level.root=INFO
+      - logging.level.org.springframowrk.cloud.gateway.route.RouteDefinitionLocator = INFO
+      - logging.level.org.springframowrk.cloud.gateway= TRACE
+      - eureka.client.serviceUrl.defaultZone= http://eureka:8761/eureka/
+    networks:
+      - my-network
+  userserive:
+    build:
+      context: ../backend/services/user-service
+      dockerfile: Dockerfile
+    image: "userserive"
+    container_name: userserive
     restart: "on-failure"
     ports:
       - "8081:8081"
