@@ -28,7 +28,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     volumes:
-      - ./jenkins_home:/var/jenkins_home
+      - jenkins_home:/var/jenkins_home
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -38,7 +38,7 @@ services:
   nexus:
     image: sonatype/nexus3:3.37.0
     volumes:
-      - ./nexus_data:/nexus-data
+      - nexus_data:/nexus-data
     ports:
       - "8081:8081"
     networks:
@@ -65,3 +65,5 @@ networks:
   monitoring:
 volumes:
   prometheus_data:
+  nexus_data:
+  jenkins_home:
